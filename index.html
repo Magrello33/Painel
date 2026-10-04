@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Relatório de Desempenho</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#12091F;
+    color:#fff;
+    min-height:100vh;
+    padding:30px 15px;
+}
+
+/* =========================
+   TELA DE LOGIN
+========================= */
+
+#loginScreen{
+    min-height:calc(100vh - 60px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-box{
+    width:100%;
+    max-width:400px;
+    background:linear-gradient(145deg,#3B1766,#211332);
+    border:1px solid #7B35C9;
+    border-radius:24px;
+    padding:40px 30px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.login-icon{
+    width:70px;
+    height:70px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    background:#4B207A;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    border:1px solid #8C4BD1;
+}
+
+.login-box h1{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.login-box p{
+    color:#C8B8D8;
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:25px;
+}
+
+.password-input{
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    border:1px solid #62407E;
+    background:#171022;
+    color:#fff;
+    font-size:18px;
+    text-align:center;
+    outline:none;
+    letter-spacing:5px;
+}
+
+.password-input:focus{
+    border-color:#A45DE5;
+    box-shadow:0 0 0 3px rgba(164,93,229,.12);
+}
+
+.login-button{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    border:0;
+    border-radius:12px;
+    background:linear-gradient(135deg,#7B35C9,#A45DE5);
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.login-button:hover{
+    transform:translateY(-1px);
+}
+
+.error{
+    color:#ff7777;
+    font-size:13px;
+    margin-top:15px;
+    display:none;
+}
+
+/* =========================
+   RELATÓRIO
+========================= */
+
+#report{
+    display:none;
+}
+
+.container{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+}
+
+/* CABEÇALHO */
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header .tag{
+    display:inline-block;
+    background:#3B1766;
+    color:#E0C8F5;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:.5px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    font-size:clamp(28px,5vw,44px);
+    margin-bottom:8px;
+}
+
+.header p{
+    color:#C8B8D8;
+    font-size:15px;
+    line-height:1.6;
+}
+
+.header strong{
+    color:#fff;
+}
+
+/* CARD PRINCIPAL */
+
+.main-card{
+    background:linear-gradient(135deg,#3B1766,#211332);
+    border:1px solid #7B35C9;
+    border-radius:22px;
+    padding:30px;
+    margin-bottom:25px;
+    text-align:center;
+    box-shadow:0 15px 50px rgba(0,0,0,.3);
+}
+
+.main-card span{
+    color:#DCC7EC;
+    font-size:15px;
+}
+
+.main-card h2{
+    font-size:clamp(38px,8vw,70px);
+    margin:10px 0;
+    letter-spacing:-2px;
+}
+
+.main-card p{
+    color:#C8B8D8;
+    font-size:14px;
+}
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:linear-gradient(145deg,#211332,#171022);
+    border:1px solid #3A2850;
+    border-radius:18px;
+    padding:24px 20px;
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
+}
+
+.card .icon{
+    font-size:24px;
+    margin-bottom:15px;
+}
+
+.card span{
+    display:block;
+    color:#B9A8C8;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.card h2{
+    font-size:26px;
+    margin-bottom:7px;
+}
+
+.card small{
+    color:#63e6a3;
+    font-size:12px;
+    font-weight:bold;
+}
+
+/* GRÁFICO */
+
+.chart-card{
+    background:#211332;
+    border:1px solid #3A2850;
+    border-radius:22px;
+    padding:28px;
+}
+
+.chart-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    gap:15px;
+}
+
+.chart-header h3{
+    font-size:20px;
+}
+
+.chart-header span{
+    color:#B9A8C8;
+    font-size:13px;
+}
+
+/* EIXO DO GRÁFICO */
+
+.chart-wrapper{
+    display:flex;
+    gap:10px;
+}
+
+.y-axis{
+    width:45px;
+    height:280px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    text-align:right;
+    color:#8F7DA0;
+    font-size:10px;
+    padding-bottom:2px;
+}
+
+.chart-area{
+    flex:1;
+}
+
+.chart{
+    height:280px;
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    padding:20px 5px 0;
+    border-bottom:1px solid #49375A;
+    position:relative;
+}
+
+.chart::before,
+.chart::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    border-top:1px dashed #3A2A4A;
+}
+
+.chart::before{
+    top:50%;
+}
+
+.chart::after{
+    top:25%;
+}
+
+.bar-area{
+    flex:1;
+    height:100%;
+    display:flex;
+    align-items:flex-end;
+    position:relative;
+    z-index:2;
+}
+
+.bar{
+    width:100%;
+    border-radius:8px 8px 0 0;
+    background:linear-gradient(to top,#7B35C9,#A45DE5);
+    min-height:20px;
+    box-shadow:0 0 18px rgba(164,93,229,.25);
+    position:relative;
+}
+
+.bar-value{
+    position:absolute;
+    top:-25px;
+    left:50%;
+    transform:translateX(-50%);
+    color:#E6D8F0;
+    font-size:10px;
+    white-space:nowrap;
+}
+
+.dates{
+    display:flex;
+    gap:12px;
+    margin-top:10px;
+}
+
+.dates div{
+    flex:1;
+    text-align:center;
+    color:#8F7DA0;
+    font-size:10px;
+}
+
+/* RODAPÉ */
+
+.footer{
+    text-align:center;
+    color:#7F708C;
+    font-size:11px;
+    margin-top:25px;
+    line-height:1.6;
+}
+
+.footer strong{
+    color:#B9A8C8;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:850px){
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:520px){
+
+    body{
+        padding:20px 12px;
+    }
+
+    #loginScreen{
+        min-height:calc(100vh - 40px);
+    }
+
+    .login-box{
+        padding:35px 22px;
+    }
+
+    .cards{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .card{
+        padding:18px 14px;
+    }
+
+    .card h2{
+        font-size:21px;
+    }
+
+    .main-card{
+        padding:25px 15px;
+    }
+
+    .chart-card{
+        padding:20px 12px;
+    }
+
+    .chart{
+        height:220px;
+        gap:6px;
+    }
+
+    .y-axis{
+        height:220px;
+        width:38px;
+        font-size:8px;
+    }
+
+    .dates{
+        gap:6px;
+    }
+
+    .dates div{
+        font-size:8px;
+    }
+
+    .bar-value{
+        font-size:8px;
+    }
+
+    .chart-header{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     TELA DE SENHA
+========================= -->
+
+<div id="loginScreen">
+
+    <div class="login-box">
+
+        <div class="login-icon">
+            🔒
+        </div>
+
+        <h1>Acesso restrito</h1>
+
+        <p>
+            Digite a senha para acessar<br>
+            o Relatório de Visualizações.
+        </p>
+
+        <input
+            type="password"
+            id="passwordInput"
+            class="password-input"
+            placeholder="••••"
+            inputmode="numeric"
+            maxlength="4"
+            autocomplete="off"
+        >
+
+        <button class="login-button" onclick="login()">
+            ENTRAR
+        </button>
+
+        <div id="errorMessage" class="error">
+            Senha incorreta. Tente novamente.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     RELATÓRIO
+========================= -->
+
+<div id="report">
+
+<div class="container">
+
+    <!-- CABEÇALHO -->
+
+    <div class="header">
+
+        <div class="tag">
+            RELATÓRIO VISUALIZAÇÕES
+        </div>
+
+        <h1>Studio Bella Nails</h1>
+
+        <p>
+            Período analisado:
+            <strong>10/09/2026 a 03/10/2026</strong><br>
+            <strong>Operador: Magre = Cod:13****902</strong>
+        </p>
+
+    </div>
+
+
+    <!-- TOTAL -->
+
+    <div class="main-card">
+
+        <span>Visualizações do site</span>
+
+        <h2>30.482.731</h2>
+
+        <p>
+            Total de visualizações no período analisado
+        </p>
+
+    </div>
+
+
+    <!-- CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="icon">👥</div>
+            <span>Visitantes</span>
+            <h2>12.847.000</h2>
+            <small>+38% no período</small>
+        </div>
+
+
+        <div class="card">
+            <div class="icon">📱</div>
+            <span>Acessos pelo celular</span>
+            <h2>9.214.000</h2>
+            <small>71,7% dos visitantes</small>
+        </div>
+
+
+        <div class="card">
+            <div class="icon">💻</div>
+            <span>Acessos pelo computador</span>
+            <h2>3.633.000</h2>
+            <small>28,3% dos visitantes</small>
+        </div>
+
+
+        <div class="card">
+            <div class="icon">📈</div>
+            <span>Crescimento</span>
+            <h2>+38%</h2>
+            <small>Durante o período analisado</small>
+        </div>
+
+    </div>
+
+
+    <!-- GRÁFICO -->
+
+    <div class="chart-card">
+
+        <div class="chart-header">
+
+            <h3>Evolução das visualizações</h3>
+
+            <span>
+                10/09/2026 → 03/10/2026
+            </span>
+
+        </div>
+
+
+        <div class="chart-wrapper">
+
+            <div class="y-axis">
+                <div>30 mi</div>
+                <div>22,5 mi</div>
+                <div>15 mi</div>
+                <div>7,5 mi</div>
+                <div>0</div>
+            </div>
+
+
+            <div class="chart-area">
+
+                <div class="chart">
+
+                    <div class="bar-area">
+                        <div class="bar" style="height:24%;">
+                            <div class="bar-value">7,2 mi</div>
+                        </div>
+                    </div>
+
+                    <div class="bar-area">
+                        <div class="bar" style="height:34%;">
+                            <div class="bar-value">10,1 mi</div>
+                        </div>
+                    </div>
+
+                    <div class="bar-area">
+                        <div class="bar" style="height:48%;">
+                            <div class="bar-value">14,3 mi</div>
+                        </div>
+                    </div>
+
+                    <div class="bar-area">
+                        <div class="bar" style="height:62%;">
+                            <div class="bar-value">18,7 mi</div>
+                        </div>
+                    </div>
+
+                    <div class="bar-area">
+                        <div class="bar" style="height:77%;">
+                            <div class="bar-value">23,1 mi</div>
+                        </div>
+                    </div>
+
+                    <div class="bar-area">
+                        <div class="bar" style="height:91%;">
+                            <div class="bar-value">27,4 mi</div>
+                        </div>
+                    </div>
+
+                    <div class="bar-area">
+                        <div class="bar" style="height:100%;">
+                            <div class="bar-value">30,48 mi</div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="dates">
+
+                    <div>10/09</div>
+                    <div>14/09</div>
+                    <div>18/09</div>
+                    <div>22/09</div>
+                    <div>26/09</div>
+                    <div>30/09</div>
+                    <div>03/10</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RODAPÉ -->
+
+    <div class="footer">
+
+        <strong>Relatório de Visualizações</strong><br>
+
+        Operador, Magre = cod:13*****902.
+        Ferramenta exclusiva, para análise de desempenho do site.
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     SENHA
+========================= -->
+
+<script>
+
+function login(){
+
+    const senha = document.getElementById("passwordInput").value;
+    const erro = document.getElementById("errorMessage");
+
+    if(senha === "1533"){
+
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("report").style.display = "block";
+
+    }else{
+
+        erro.style.display = "block";
+
+        document.getElementById("passwordInput").value = "";
+
+        document.getElementById("passwordInput").focus();
+
+    }
+}
+
+
+/* Permite apertar ENTER */
+
+document.getElementById("passwordInput").addEventListener("keydown", function(event){
+
+    if(event.key === "Enter"){
+        login();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
